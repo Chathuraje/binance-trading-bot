@@ -14,3 +14,5 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 TIMEZONE = config.get('Settings', 'timezone')
+COIN_PAIR = config.get('Trading Settings', 'COIN_PAIR')
+INTERVAL = config.get('Trading Settings', 'INTERVAL')
