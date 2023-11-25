@@ -6,7 +6,7 @@ from binance.um_futures import UMFutures
 # Importing API keys from a configuration file
 from libraries.config import BINANCE_API_KEY, BINANCE_SECRET_KEY
 
-def connect_to_binance(api_class, name, use_api_keys=True):
+def __connect_to_binance(api_class, name, use_api_keys=True):
     """
     Connects to the Binance API using the provided API class.
 
@@ -53,7 +53,7 @@ def connect_to_spot(use_api_keys=True):
     Returns:
         Spot: The connected Binance Spot API client.
     """
-    return connect_to_binance(Spot, "Spot", use_api_keys)
+    return __connect_to_binance(Spot, "Spot", use_api_keys)
 
 def connect_to_CMFutures(use_api_keys=True):
     """
@@ -65,7 +65,7 @@ def connect_to_CMFutures(use_api_keys=True):
     Returns:
         CMFutures: The connected Binance Coin-M Futures API client.
     """
-    return connect_to_binance(CMFutures, "CMFutures", use_api_keys)
+    return __connect_to_binance(CMFutures, "CMFutures", use_api_keys)
 
 def connect_to_UMFutures(use_api_keys=True):
     """
@@ -77,4 +77,4 @@ def connect_to_UMFutures(use_api_keys=True):
     Returns:
         UMFutures: The connected Binance USD-M Futures API client.
     """
-    return connect_to_binance(UMFutures, "UMFutures", use_api_keys)
+    return __connect_to_binance(UMFutures, "UMFutures", use_api_keys)
