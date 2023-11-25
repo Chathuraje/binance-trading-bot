@@ -4,7 +4,7 @@ from binance.cm_futures import CMFutures
 from binance.um_futures import UMFutures
 
 # Importing API keys from a configuration file
-from .config import BINANCE_API_KEY, BINANCE_SECRET_KEY
+from libraries.config import BINANCE_API_KEY, BINANCE_SECRET_KEY
 
 def connect_to_binance(api_class, name, use_api_keys=True):
     """
