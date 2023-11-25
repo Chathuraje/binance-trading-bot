@@ -2,7 +2,7 @@ from libraries.binance.connect import connect_to_spot
 from libraries.binance.connect import connect_to_CMFutures
 from libraries.binance.connect import connect_to_UMFutures
 
-from libraries.binance.binance_market import fetch_spot_data
+from libraries.binance.market import fetch_spot_data
 
 
 from libraries.config import COIN_PAIR, INTERVAL
