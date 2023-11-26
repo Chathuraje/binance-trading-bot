@@ -155,6 +155,10 @@ cython_debug/
 # VSCode project settings
 .vscode
 
+# Database Files
+binanceTradingBot.db
+kline_data.csv
+
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore

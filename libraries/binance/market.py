@@ -41,6 +41,7 @@ def __calculate_total_timeframes(start_time, end_time, interval):
 
 # Function to fetch klines (candlestick data) from an API
 def __fetch_klines(api_client, symbol, interval, start_time_ms, end_time_ms, limit):
+    # start_time = "2017-08-17 04:00:00" # First Record in Binance 
     """
     Fetches klines (candlestick data) from the API within a specified time range.
 
@@ -110,7 +111,7 @@ def fetch_spot_data(api_client, symbol, interval, start_time=None, end_time=None
             
         # Calculate the total number of timeframes to fetch
         if total_records is None:
-            total_timeframes = __calculate_total_timeframes(start_time, end_time, interval) + 1
+            total_timeframes = __calculate_total_timeframes(start_time, end_time, interval)
         else:
             total_timeframes = total_records
         
