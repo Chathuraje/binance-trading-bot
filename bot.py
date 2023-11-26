@@ -99,7 +99,7 @@ def main():
     bot_functions(client_spot)
     print("Bot started...")
 
-    INTERVAL = "1s"
+    # INTERVAL = "1s"
     socket_url = f"wss://stream.binance.com:9443/ws/{COIN_PAIR.lower()}@kline_{INTERVAL}"
     
     ws = websocket.WebSocketApp(socket_url, on_message=on_message, on_error=on_error, on_close=on_close)
