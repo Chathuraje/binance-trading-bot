@@ -19,7 +19,21 @@ def run_strategy():
     merged_data = pd.concat([historical_data, latest_data], ignore_index=True)
     strategy_data = strategy(merged_data)
     
-    print(strategy_data.tail(1))
+    
+    last_row = strategy_data.iloc[-1]
+    last_signal = int(last_row['signal'])
+    timestamp = last_row['timestamp']
+    close_price = last_row['close']
+
+    signal_messages = {
+        0: "No Signal",
+        1: "Buy Signal (Enter Long)",
+        -1: "Sell Signal (Enter Short)"
+    }
+
+    signal_message = signal_messages.get(last_signal, "Unknown Signal")
+    
+    print(f"At {timestamp} ({INTERVAL}), Close Price: {close_price:.2f} - {signal_message}")
     
     
     return strategy_data
@@ -63,8 +77,6 @@ def on_message(ws, message):
         new_kline['timestamp'] = pd.to_datetime(new_kline['timestamp'], unit='ms')
         new_kline['timestamp'] = new_kline['timestamp'].dt.tz_localize('UTC').dt.tz_convert(TIMEZONE)
         
-        # print(f"Time: {kline['t']}, Open: {kline['o']}, High: {kline['h']}, Low: {kline['l']}, Close: {kline['c']}, Volume: {kline['v']}")
-        
         print(f"New Data Frame Received -> Time: {new_kline['timestamp'].iloc[0].strftime('%Y-%m-%d %H:%M:%S')}, Open: {kline['o']}, High: {kline['h']}, Low: {kline['l']}, Close: {kline['c']}, Volume: {kline['v']}")
         new_kline.to_csv(csv_file_path, mode='a', header=False, index=False, sep=',', date_format='%Y-%m-%d %H:%M:%S.%f')
         
@@ -87,7 +99,7 @@ def main():
     bot_functions(client_spot)
     print("Bot started...")
 
-    # INTERVAL = "1s"
+    INTERVAL = "1s"
     socket_url = f"wss://stream.binance.com:9443/ws/{COIN_PAIR.lower()}@kline_{INTERVAL}"
     
     ws = websocket.WebSocketApp(socket_url, on_message=on_message, on_error=on_error, on_close=on_close)
