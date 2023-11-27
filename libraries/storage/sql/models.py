@@ -12,3 +12,12 @@ class HistoricalData(Base):
     low = Column(Float)
     close = Column(Float)
     volume = Column(Float)
+class StrategyData(Base):
+    __tablename__ = 'StrategyData'
+
+    timestamp = Column(DateTime, primary_key=True)
+    close = Column(Float)
+    bb_upper = Column(Float)
+    bb_lower = Column(Float)
+    ema = Column(Float)
+    signal = Column(Float)
