@@ -4,7 +4,6 @@ from libraries.strategy.db_StrategyData import get_last_timstamp, read_last_reco
 from libraries.binance.binance_trade import enter_trade
 from libraries.binance.connect import connect_to_UMFutures, connect_to_CMFutures, connect_to_spot
 from libraries.config import MARKET, FIAT_CURRENCY, MINUMUM_ACCOUNT_BALANCE
-import json
 
 # Global variable to store the last processed timestamp
 last_processed_timestamp = pd.to_datetime(get_last_timstamp())

@@ -10,6 +10,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import ta
+from libraries.config import RISK_AMOUNT
 
 
 def strategy(data):
@@ -49,4 +50,8 @@ def strategy(data):
     # print(f"Number of Buy Signals (1): {count_buy_signals}")
     # print(f"Number of Sell Signals (-1): {count_sell_signals}")
 
+    return data
+
+
+def exit_strategy(data):
     return data
