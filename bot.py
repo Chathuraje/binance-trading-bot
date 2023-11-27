@@ -1,6 +1,6 @@
 from libraries.config import TIMEZONE, INTERVAL, COIN_PAIR
 from libraries.binance.connect import connect_to_spot
-from libraries.storage.sql.db_sqlalchemy import update_database, create_database, update_data, read_data
+from libraries.storage.sql.db_HistoricalData import update_database, create_database, update_data, read_data
 from libraries.strategy.main import strategy
 import json
 import websocket
