@@ -100,7 +100,7 @@ def __find_last_timeframe():
     return next_timeframe
     
 
-def update_database(client_spot):
+def update_historical_database(client_spot):
     last_timeframe = __find_last_timeframe()
     latest_data = fetch_spot_data(client_spot, COIN_PAIR, INTERVAL, start_time=last_timeframe)
     
