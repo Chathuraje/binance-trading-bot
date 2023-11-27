@@ -1,4 +1,4 @@
-from libraries.config import TIMEZONE, COIN_PAIR
+from libraries.config import TIMEZONE, COIN_PAIR, INTERVAL
 from libraries.binance.connect import connect_to_spot
 from libraries.storage.sql.db_HistoricalData import update_historical_database, insert_data
 from libraries.strategy.db_StrategyData import update_strategy_database, insert_data_strategy
@@ -10,14 +10,11 @@ import pandas as pd
 
 
 def run_strategy(new_kline):
-    
     historical_data = insert_data(new_kline)
     strategy_data = strategy(historical_data)
     
     last_row = strategy_data.iloc[-1]
     insert_data_strategy(last_row)
-    
-    print(last_row)
     
     
 
@@ -73,7 +70,6 @@ def collect_market_data():
     bot_functions(client_spot)
     print("Bot started...")
 
-    INTERVAL = "1m"
     socket_url = f"wss://stream.binance.com:9443/ws/{COIN_PAIR.lower()}@kline_{INTERVAL}"
     
     ws = websocket.WebSocketApp(socket_url, on_message=on_message, on_error=on_error, on_close=on_close)

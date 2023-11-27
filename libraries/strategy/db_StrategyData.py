@@ -4,6 +4,24 @@ from libraries.binance.market import fetch_spot_data
 from libraries.config import COIN_PAIR, INTERVAL
 from libraries.strategy.main import strategy
 
+def get_last_timstamp():
+    db = connect_sqlalchemy()
+
+    # Define the SQL query to retrieve data from the 'historical_data' table
+    query = "SELECT timestamp FROM StrategyData ORDER BY timestamp DESC LIMIT 1"
+
+    # Use pandas to read the data from the database into a DataFrame
+    data = pd.read_sql(query, con=db)
+
+    # Close the database connection
+    db.dispose()
+
+    if data.empty:
+        return None
+    else:
+        return data['timestamp'].iloc[0]
+    
+    
     
 def insert_data_strategy(row):
     db = connect_sqlalchemy()
@@ -25,7 +43,21 @@ def insert_data_strategy(row):
 
     return read_data()
     
-    
+
+def read_last_record():
+    db = connect_sqlalchemy()
+
+    # Define the SQL query to retrieve data from the 'historical_data' table
+    query = "SELECT * FROM StrategyData ORDER BY timestamp DESC LIMIT 1"
+
+    # Use pandas to read the data from the database into a DataFrame
+    data = pd.read_sql(query, con=db)
+
+    # Close the database connection
+    db.dispose()
+
+    return data
+
     
 def read_data():
     # Connect to the database

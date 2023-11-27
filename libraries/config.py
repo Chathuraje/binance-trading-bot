@@ -20,6 +20,9 @@ config.read('config.ini')
 TIMEZONE = config.get('Settings', 'timezone')
 COIN_PAIR = config.get('Trading Settings', 'COIN_PAIR')
 INTERVAL = config.get('Trading Settings', 'INTERVAL')
+MARKET = config.get('Trading Settings', 'MARKET')
+FIAT_CURRENCY = config.get('Trading Settings', 'FIAT_CURRENCY')
+MINUMUM_ACCOUNT_BALANCE = config.get('Trading Settings', 'MINUMUM_ACCOUNT_BALANCE')
 
 # Database Names
 DB_NAME = config.get('Database Settings', 'DB_NAME')
