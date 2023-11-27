@@ -9,13 +9,17 @@ import websocket
 import pandas as pd
 
 
-def run_strategy(new_kline, client_trade):
+def run_strategy(new_kline):
     
     historical_data = insert_data(new_kline)
     strategy_data = strategy(historical_data)
     
     last_row = strategy_data.iloc[-1]
     insert_data_strategy(last_row)
+    
+    print(last_row)
+    
+    
 
 def bot_functions(client):
     create_database()
@@ -28,7 +32,7 @@ def bot_functions(client):
     historical_data = update_historical_database(client)
     update_strategy_database(historical_data)
 
-def on_message(client_trade, ws, message):
+def on_message(ws, message):
     data = json.loads(message)
     
     if 'k' in data and 'x' in data['k'] and data['k']['x']:
@@ -50,7 +54,7 @@ def on_message(client_trade, ws, message):
         new_kline['timestamp'] = new_kline['timestamp'].dt.tz_localize('UTC').dt.tz_convert(TIMEZONE).iloc[0].strftime('%Y-%m-%d %H:%M:%S.%f')
         print(f"New Data Frame Received -> Time: {new_kline['timestamp'].iloc[0]}, Open: {new_kline['open'].iloc[0]}, High: {new_kline['high'].iloc[0]}, Low: {new_kline['low'].iloc[0]}, Close: {new_kline['close'].iloc[0]}, Volume: {new_kline['volume'].iloc[0]}")
 
-        signal = run_strategy(new_kline, client_trade)
+        signal = run_strategy(new_kline)
         
         
 
