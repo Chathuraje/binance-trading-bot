@@ -1,5 +1,5 @@
-from libraries.config import TIMEZONE, INTERVAL, COIN_PAIR
-from libraries.binance.connect import connect_to_spot, connect_to_UMFutures
+from libraries.config import TIMEZONE, COIN_PAIR
+from libraries.binance.connect import connect_to_spot
 from libraries.storage.sql.db_HistoricalData import update_historical_database, insert_data
 from libraries.strategy.db_StrategyData import update_strategy_database, insert_data_strategy
 from libraries.strategy.main import strategy
