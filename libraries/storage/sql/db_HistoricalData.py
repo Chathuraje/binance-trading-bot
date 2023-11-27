@@ -94,7 +94,7 @@ def update_data(data):
         return read_data()
 
     # Retrieve existing timestamps from the database
-    existing_timestamps = pd.read_sql("SELECT DISTINCT timestamp FROM StrategyData", con=db)['timestamp']
+    existing_timestamps = pd.read_sql("SELECT DISTINCT timestamp FROM HistoricalData", con=db)['timestamp']
 
     # Filter the new data to include only rows with timestamps not present in the database
     new_data = data[~data['timestamp'].isin(existing_timestamps)]
