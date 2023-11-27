@@ -3,18 +3,27 @@ import pandas as pd
 from libraries.binance.market import fetch_spot_data
 from libraries.config import COIN_PAIR, INTERVAL
 
-# def insert_data(data):
-#     db = connect_sqlalchemy()
-    
-#      # Remove the last row from the DataFrame
-#     data_without_last_row = data.iloc[:-1]
-    
-#     # Save the DataFrame to the database
-#     data_without_last_row.to_sql('historical_data', con=db, if_exists='replace', index=False)
-#     print(f'DataFrame saved to the database.')
-    
-#     # Close the database connection
-#     db.dispose()
+def insert_data(row):
+    db = connect_sqlalchemy()
+
+    # Check if the timestamp already exists in the database
+    timestamp_value = row['timestamp'].iloc[0]  # Extract scalar value from the pandas Series
+    existing_timestamp = pd.read_sql(
+        "SELECT timestamp FROM HistoricalData WHERE timestamp = :timestamp",
+        con=db, params={'timestamp': timestamp_value}
+    )
+
+    if existing_timestamp.empty:
+        # Save the new data to the database
+        row_df = row[['timestamp', 'open', 'high', 'low', 'close', 'volume']]  # Select relevant columns
+        row_df.to_sql('HistoricalData', con=db, if_exists='append', index=False)
+
+    # Close the database connection
+    db.dispose()
+
+    return read_data()
+
+
     
     
 def read_data():
@@ -80,12 +89,22 @@ def update_historical_database(client_spot):
 def update_data(data):
     db = connect_sqlalchemy()
     
-    # Save the DataFrame to the database
-    data.to_sql('HistoricalData', con=db, if_exists='append', index=False)
-    print(f'DataFrame saved to the database.')
-    
+    # Check if data is empty
+    if data.empty:
+        return read_data()
+
+    # Retrieve existing timestamps from the database
+    existing_timestamps = pd.read_sql("SELECT DISTINCT timestamp FROM StrategyData", con=db)['timestamp']
+
+    # Filter the new data to include only rows with timestamps not present in the database
+    new_data = data[~data['timestamp'].isin(existing_timestamps)]
+
+    if not new_data.empty:
+        # Save the new data to the database
+        new_data.to_sql('HistoricalData', con=db, if_exists='append', index=False)
+
     # Close the database connection
     db.dispose()
-    
+
     return read_data()
     

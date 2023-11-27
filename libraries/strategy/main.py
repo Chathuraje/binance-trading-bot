@@ -38,6 +38,9 @@ def strategy(data):
 
     # Downtrend signal
     data.loc[(data['ema'] > data['bb_upper']), 'signal'] = -1
+    
+    # Convert the 'signal' column to integers
+    data['signal'] = data['signal'].astype(int)
 
     # # Count occurrences of 1 and -1
     # count_buy_signals = (data['signal'] == 1).sum()

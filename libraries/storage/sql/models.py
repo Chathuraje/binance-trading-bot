@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Float
+from sqlalchemy import Column, DateTime, Float, INTEGER
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -20,4 +20,4 @@ class StrategyData(Base):
     bb_upper = Column(Float)
     bb_lower = Column(Float)
     ema = Column(Float)
-    signal = Column(Float)
+    signal = Column(INTEGER)
