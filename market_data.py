@@ -67,7 +67,7 @@ def on_close(ws, close_status_code, close_msg):
 def on_open(ws):
     print("WebSocket connection opened")
 
-def main():
+def collect_market_data():
     client_spot = connect_to_spot(use_api_keys=False)
     print("Starting bot...")
     bot_functions(client_spot)
@@ -85,5 +85,8 @@ def main():
         print("WebSocket connection closed due to keyboard interrupt.")
         ws.close()
 
+
+
 if __name__ == "__main__":
-    main()
+    collect_market_data()
+
