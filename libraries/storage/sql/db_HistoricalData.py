@@ -2,41 +2,6 @@ from .connect import connect_sqlalchemy
 import pandas as pd
 from libraries.binance.market import fetch_spot_data
 from libraries.config import COIN_PAIR, INTERVAL
-from .models import Base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import inspect
-
-
-def create_database():
-    # Connect to the database engine
-    engine = connect_sqlalchemy()
-    if not engine:
-        return
-
-    # Bind the models to the engine
-    Base.metadata.bind = engine
-
-    # Create a session to ensure that the engine is bound before creating tables
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-    # Get the expected table names from the Base
-    expected_tables = list(Base.metadata.tables.keys())
-
-    # Use the inspect module to get information about the tables
-    inspector = inspect(engine)
-    existing_tables = inspector.get_table_names()
-
-    # Check and create tables if they do not exist
-    for table_name in expected_tables:
-        if table_name not in existing_tables:
-            print(f"Table '{table_name}' not found. Creating...")
-            Base.metadata.tables[table_name].create(bind=engine)
-            print(f"Table '{table_name}' created successfully.")
-        else:
-            print(f"Table '{table_name}' already exists.")
-
-    print("Database setup complete.")
 
 # def insert_data(data):
 #     db = connect_sqlalchemy()
