@@ -4,7 +4,7 @@ from binance.cm_futures import CMFutures
 from binance.um_futures import UMFutures
 
 # Importing API keys from a configuration file
-from libraries.config import BINANCE_API_KEY, BINANCE_SECRET_KEY
+from libraries.config import BINANCE_API_KEY, BINANCE_SECRET_KEY, MODE
 
 def __connect_to_binance(api_class, name, use_api_keys=True):
     """
@@ -23,11 +23,16 @@ def __connect_to_binance(api_class, name, use_api_keys=True):
         if use_api_keys:
             if api_class == Spot:
                 client = api_class(api_key=BINANCE_API_KEY, api_secret=BINANCE_SECRET_KEY)
+                if MODE == 'TESTNET':
+                    client.base_url = "https://testnet.binance.vision/"
+
             else:
                 client = api_class(key=BINANCE_API_KEY, secret=BINANCE_SECRET_KEY)
-            
+                if MODE == 'TESTNET':
+                    client.base_url = "https://testnet.binancefuture.com"
+                            
             client.ping()
-            print(f"Connecting to Binance {name} API successful")
+            print(f"Connecting to Binance {name} API successful -> Mode {MODE}")
             
         else:
             client = api_class()

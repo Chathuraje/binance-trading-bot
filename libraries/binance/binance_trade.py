@@ -1,7 +1,4 @@
 from libraries.config import MARKET, COIN_PAIR
-from binance.spot import Spot
-from binance.cm_futures import CMFutures
-from binance.um_futures import UMFutures
 
 def enter_trade(client, timestamp, latest_signal):
     
