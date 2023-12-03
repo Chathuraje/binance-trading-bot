@@ -3,7 +3,7 @@ import pandas as pd
 from libraries.strategy.db_StrategyData import get_last_timstamp, read_last_record
 from libraries.binance.binance_trade import enter_trade
 from libraries.binance.connect import connect_to_UMFutures, connect_to_CMFutures, connect_to_spot
-from libraries.config import MARKET, FIAT_CURRENCY, MINUMUM_ACCOUNT_BALANCE
+from libraries.config import MARKET, FIAT_CURRENCY, MINUMUM_ACCOUNT_BALANCE, COIN_PAIR
 
 # Global variable to store the last processed timestamp
 last_processed_timestamp = pd.to_datetime(get_last_timstamp())
@@ -51,24 +51,41 @@ def __get_account_balance(client):
     return balance
 
 
-
 def __select_the_market():
-    if MARKET == "Spot":
-        client = connect_to_spot(use_api_keys=True)
-    elif MARKET == "CMFutures":
-        client = connect_to_CMFutures(use_api_keys=True)
-    elif MARKET == "UMFutures":
+    if MARKET == "UMFutures":
         client = connect_to_UMFutures(use_api_keys=True)
+    # elif MARKET == "Spot":
+    #     client = connect_to_spot(use_api_keys=True)
+    # elif MARKET == "CMFutures":
+    #     client = connect_to_CMFutures(use_api_keys=True)
     else:
         print("Invalid Market")
         exit(1)
         
     return client
 
+
+def __setup_account(client):
+    if MARKET == "CMFutures" or MARKET == "UMFutures":
+        try:
+            client.change_position_mode(dualSidePosition=True) # change position mode to Hedge Mode
+        except:
+            print(f"Failed to change position mode to Hedge Mode or current position mode is already Hedge Mode")
+        
+        try:
+            client.change_margin_type(symbol=COIN_PAIR, marginType='CROSSED')
+        except:
+            print(f"Failed to change margin type to CROSSED or current margin type is already CROSSED")
+            
+    else:
+        print("Invalid Market")
+        exit(1)
+
 if __name__ == "__main__":
     print("Starting the Bot..")
     client = __select_the_market()
     account_balance = __get_account_balance(client)
+    __setup_account(client)
     
     print(f"The available Balance for {FIAT_CURRENCY} is: {account_balance}")
     

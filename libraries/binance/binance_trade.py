@@ -11,18 +11,10 @@ def enter_trade(client, timestamp, latest_signal):
     take_profit = latest_signal['take_profit'].iloc[0]
     
     if MARKET == "CMFutures" or MARKET == "UMFutures":
-        try:
-            client.change_position_mode(dualSidePosition=True) # change position mode to Hedge Mode
-        except:
-            print(f"Failed to change position mode to Hedge Mode or current position mode is already Hedge Mode")
-        
-        try:
-            client.change_margin_type(symbol=COIN_PAIR, marginType='CROSSED')
-        except:
-            print(f"Failed to change margin type to CROSSED or current margin type is already CROSSED")
-        
+        # Set leverage
         client.change_leverage(symbol=COIN_PAIR, leverage=leverage)
-    
+        
+        
     if signal_type == 1:
         side = "BUY"
         positionSide = "LONG"

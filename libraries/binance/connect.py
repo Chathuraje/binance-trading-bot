@@ -20,11 +20,12 @@ def __connect_to_binance(api_class, name, use_api_keys=True):
     """
     try:
         # Creating an instance of the specified Binance API class
+        # TODO: SPOT Testnet Does not support
         if use_api_keys:
             if api_class == Spot:
                 client = api_class(api_key=BINANCE_API_KEY, api_secret=BINANCE_SECRET_KEY)
                 if MODE == 'TESTNET':
-                    client.base_url = "https://testnet.binance.vision/"
+                    client.base_url = "https://testnet.binance.vision"
 
             else:
                 client = api_class(key=BINANCE_API_KEY, secret=BINANCE_SECRET_KEY)
