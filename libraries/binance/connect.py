@@ -38,7 +38,7 @@ def __connect_to_binance(api_class, name, use_api_keys=True):
             client = api_class()
             client.ping()
             
-            print(f"Connecting to Binance {name} successful")
+            print(f"Connecting to Binance {name} successful -> Mode {MODE}")
             
         # Pinging the Binance server to ensure a successful connection
         return client
