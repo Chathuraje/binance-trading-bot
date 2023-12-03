@@ -1,7 +1,5 @@
 from libraries.storage.sql.connect import connect_sqlalchemy
 import pandas as pd
-from libraries.binance.market import fetch_spot_data
-from libraries.config import COIN_PAIR, INTERVAL
 from libraries.strategy.main import strategy
 
 def get_last_timstamp():
@@ -35,7 +33,7 @@ def insert_data_strategy(row):
 
     if existing_timestamp.empty:
         # Save the new data to the database
-        row_df = pd.DataFrame([row[['timestamp', 'close', 'bb_upper', 'bb_lower', 'ema', 'signal']]]) # Select relevant columns
+        row_df = pd.DataFrame([row[['timestamp', 'close', 'bb_upper', 'bb_lower', 'ema', 'signal', 'quantity', 'leverage', 'stop_loss', 'take_profit']]]) # Select relevant columns
         row_df.to_sql('StrategyData', con=db, if_exists='append', index=False)
 
     # Close the database connection

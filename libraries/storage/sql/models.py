@@ -21,3 +21,7 @@ class StrategyData(Base):
     bb_lower = Column(Float)
     ema = Column(Float)
     signal = Column(INTEGER)
+    quantity = Column(Float)
+    leverage = Column(INTEGER)
+    stop_loss = Column(Float)
+    take_profit = Column(Float)

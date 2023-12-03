@@ -28,16 +28,11 @@ def check_for_signals(client):
             if latest_timestamp > last_processed_timestamp:
                 # Extract relevant information from the signal
                 timestamp = latest_timestamp
-                signal_type = latest_signal['signal'].iloc[0]
-                close_price = latest_signal['close'].iloc[0]
-                # Add any other relevant fields
-
-
+                
                 if latest_signal['signal'].iloc[0] == 0:
                     print(f"No signal at {timestamp}")
                 elif latest_signal['signal'].iloc[0] == 1 or latest_signal['signal'].iloc[0] == -1:
-                    # Execute trade based on the signal
-                    enter_trade(client, timestamp, signal_type, close_price)
+                    enter_trade(client, timestamp, latest_signal)
                 else:
                     print(f"Invalid signal at {timestamp}")
                 

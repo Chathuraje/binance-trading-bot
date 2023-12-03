@@ -1,17 +1,7 @@
-# --------------------------------------------------------------------------------------------
-# Description: Boliger Band, RSI and MA based strategy.
-# # Boliger Band - Period: 14 | Deviation: 2
-# # Moving Average - Period: 100 | Type: EMA
-# --------------------------------------------------------------------------------------------
-# Only if the Moving Average is indicates uptrend: When the price crosses the lower Bollinger line, the chart is likely to go up.
-# Only if the Moving Average is indicates downtrend: When the price breaks through the uppeer Bollinger line, you can except the chart to go down.
-# --------------------------------------------------------------------------------------------
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import ta
 from libraries.config import RISK_AMOUNT
-
 
 def strategy(data):
     # Convert 'close' column to numeric
@@ -43,15 +33,15 @@ def strategy(data):
     # Convert the 'signal' column to integers
     data['signal'] = data['signal'].astype(int)
 
-    # # Count occurrences of 1 and -1
-    # count_buy_signals = (data['signal'] == 1).sum()
-    # count_sell_signals = (data['signal'] == -1).sum()
-
-    # print(f"Number of Buy Signals (1): {count_buy_signals}")
-    # print(f"Number of Sell Signals (-1): {count_sell_signals}")
+    # Calculate stop_loss and take_profit based on the RISK_AMOUNT
+    data['stop_loss'] = data['close'] - (data['close'] * float(RISK_AMOUNT))
+    data['take_profit'] = data['close'] + (data['close'] * float(RISK_AMOUNT))
+    
+    
+    data['quantity'] = 0.1
+    data['leverage'] = 100
 
     return data
-
 
 def exit_strategy(data):
     return data
