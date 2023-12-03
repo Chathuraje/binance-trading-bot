@@ -32,13 +32,13 @@ def __connect_to_binance(api_class, name, use_api_keys=True):
                     client.base_url = "https://testnet.binancefuture.com"
                             
             client.ping()
-            print(f"Connecting to Binance {name} API successful -> Mode {MODE}")
+            print(f"Connecting to Binance {name} API successful -> Mode: {MODE}")
             
         else:
             client = api_class()
             client.ping()
             
-            print(f"Connecting to Binance {name} successful -> Mode {MODE}")
+            print(f"Connecting to Binance {name} successful -> Mode: Without API Keys")
             
         # Pinging the Binance server to ensure a successful connection
         return client
