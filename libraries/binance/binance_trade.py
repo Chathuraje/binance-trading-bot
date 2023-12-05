@@ -18,7 +18,7 @@ def __place_the_order(client, position_side, quantity):
         data = client.new_order(**params)
         # client.new_order_test(**params)
         print(f"Order successfully placed")
-
+        
         __save_in_db(data)
         
         return data
@@ -35,22 +35,21 @@ def __place_the_take_profit(client, position_side, quantity, take_profit):
         'type': 'LIMIT',
         'positionSide': position_side,
         'quantity': quantity,
-        'price': '40000.2',
+        'price': take_profit,
         'timeinforce': 'GTC'
     }
         
     try:
         data = client.new_order(**params)
-        # client.new_order_test(**params)
-        print(f"Order successfully placed")
-
+        print(f"Take profit order successfully placed")
+        
         __save_in_db(data)
         
         return data
         
     except Exception as e:
-        print(f"Failed to place order: {e}")
-        exit(1)      
+        print(f"Failed to place take profit order: {e}")
+        exit(1)
         
 
 def __place_the_stop_loss(client, position_side, quantity, stop_loss):
@@ -60,21 +59,18 @@ def __place_the_stop_loss(client, position_side, quantity, stop_loss):
         'type': 'STOP_MARKET',
         'positionSide': position_side,
         'quantity': quantity,
-        'stopPrice': '35000.2',
-        'timeinforce': 'GTC'
+        'stopPrice': stop_loss,
+        'timeInForce': 'GTC'
     }
         
     try:
         data = client.new_order(**params)
-        # client.new_order_test(**params)
-        print(f"Order successfully placed")
-
+        print(f"Stop loss order successfully placed")
         __save_in_db(data)
-        
         return data
         
     except Exception as e:
-        print(f"Failed to place order: {e}")
+        print(f"Failed to place stop loss order: {e}")
         exit(1)
         
 
@@ -104,9 +100,3 @@ def enter_trade(client, timestamp, latest_signal):
     __place_the_order(client, position_side, quantity)  
     __place_the_stop_loss(client, position_side, quantity, stop_loss)
     __place_the_take_profit(client, position_side, quantity, take_profit)
-    
-
-    
-    
-    
-    
