@@ -34,8 +34,13 @@ def strategy(data):
     data['signal'] = data['signal'].astype(int)
 
     # Calculate stop_loss and take_profit based on the RISK_AMOUNT
-    data['stop_loss'] = data['close'] - (data['close'] * float(RISK_AMOUNT))
-    data['take_profit'] = data['close'] + (data['close'] * float(RISK_AMOUNT))
+    # Long trade
+    data.loc[data['signal'] == 1, 'stop_loss'] = data['close'] - (data['close'] * float(RISK_AMOUNT))
+    data.loc[data['signal'] == 1, 'take_profit'] = data['close'] + (data['close'] * float(RISK_AMOUNT))
+
+    # Short trade
+    data.loc[data['signal'] == -1, 'stop_loss'] = data['close'] + (data['close'] * float(RISK_AMOUNT))
+    data.loc[data['signal'] == -1, 'take_profit'] = data['close'] - (data['close'] * float(RISK_AMOUNT))
     
     
     data['quantity'] = 0.1
