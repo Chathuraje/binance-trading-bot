@@ -28,7 +28,8 @@ def __save_in_db(close_price, order_data, stop_loss_data, take_profit_data):
             'Order ID': take_profit_data['orderId'],
             'Client Order ID': take_profit_data['clientOrderId'],
             'Take Profit Price': take_profit_data['price']
-        }
+        },
+        'Status': "Active Trade"
     }
     
 

@@ -22,3 +22,10 @@ class OrderDB(BaseModel):
     closePrice: float
     stopLoss: Optional[StopLossData]
     takeProfit: Optional[TakeProfitData]
+    status: str
+    
+class ActiveTradeDB(BaseModel):
+    tradeOrderId: str
+    stopLossOrderId: float
+    takeProfitOrderId: float
+    tradeID: str

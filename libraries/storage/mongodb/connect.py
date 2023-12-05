@@ -11,3 +11,4 @@ client = MongoClient(f"mongodb+srv://{DB_USERNAME}:{DB_PASSWORD}@{DB_URI}/?retry
 db = client.BinanceTradingBot
 
 trade_collection = db["trade_collection"]
+active_trade_collection = db["active_trades"]
