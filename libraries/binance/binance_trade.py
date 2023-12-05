@@ -97,6 +97,6 @@ def enter_trade(client, timestamp, latest_signal):
         print("Invalid signal_type")
         exit(1)
     
-    __place_the_order(client, position_side, quantity)  
-    __place_the_stop_loss(client, position_side, quantity, stop_loss)
-    __place_the_take_profit(client, position_side, quantity, take_profit)
+    order_data = __place_the_order(client, position_side, quantity)  
+    stop_loss_data = __place_the_stop_loss(client, position_side, quantity, stop_loss)
+    take_profit_data = __place_the_take_profit(client, position_side, quantity, take_profit)
