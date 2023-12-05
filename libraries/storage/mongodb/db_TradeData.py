@@ -17,3 +17,7 @@ def create_trade(trade_data: OrderDB) -> OrderDB:
     
     active_trade_collection.insert_one(trade_column)
     return trade_data
+
+
+def get_active_trade_count():
+    return int(active_trade_collection.count_documents({}))

@@ -2,8 +2,9 @@ import time
 import pandas as pd
 from libraries.strategy.db_StrategyData import get_last_timstamp, read_last_record
 from libraries.binance.binance_trade import enter_trade
+from libraries.storage.mongodb.db_TradeData import get_active_trade_count
 from libraries.binance.connect import connect_to_UMFutures, connect_to_CMFutures, connect_to_spot
-from libraries.config import MARKET, FIAT_CURRENCY, MINUMUM_ACCOUNT_BALANCE, COIN_PAIR
+from libraries.config import MARKET, FIAT_CURRENCY, MINUMUM_ACCOUNT_BALANCE, COIN_PAIR, MAX_ORDERS
 
 # Global variable to store the last processed timestamp
 last_processed_timestamp = pd.to_datetime(get_last_timstamp())
@@ -32,7 +33,12 @@ def check_for_signals(client):
                 if latest_signal['signal'].iloc[0] == 0:
                     print(f"No signal at {timestamp}")
                 elif latest_signal['signal'].iloc[0] == 1 or latest_signal['signal'].iloc[0] == -1:
-                    enter_trade(client, timestamp, latest_signal)
+                
+                    if get_active_trade_count() >= int(MAX_ORDERS):
+                        print(f"New Signal Received: Given {MAX_ORDERS} Orders are Active")
+                    else:
+                        enter_trade(client, timestamp, latest_signal)
+                        
                 else:
                     print(f"Invalid signal at {timestamp}")
                 
