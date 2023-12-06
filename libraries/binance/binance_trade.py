@@ -99,17 +99,6 @@ def __place_the_stop_loss(client, position_side, quantity, stop_loss):
         exit(1)
         
 
-# TODO: Make this get at the beginning
-def __get_tick_size(client):
-    data = client.exchange_info()
-    # Assuming you want to get tick size for the first symbol
-    tick_size = float(data['symbols'][0]['filters'][0]['tickSize'])
-    precision = int(data['symbols'][0]['filters'][0]['tickSize'].split('.')[1].find('1'))
-    
-    return tick_size, precision
-
-    
-    
 def __adjust_to_tick_size(price, tick_size, precision):
     # Calculate adjusted price based on tick size and precision
     adjusted_price = round(price / tick_size) * tick_size
@@ -117,8 +106,7 @@ def __adjust_to_tick_size(price, tick_size, precision):
     return round(adjusted_price, precision)
 
 
-
-def enter_trade(client, timestamp, latest_signal):
+def enter_trade(client, timestamp, latest_signal, tick_size, precision):
     signal_type = latest_signal['signal'].iloc[0]
     close_price = latest_signal['close'].iloc[0]
     
@@ -141,7 +129,6 @@ def enter_trade(client, timestamp, latest_signal):
         print("Invalid signal_type")
         exit(1)
         
-    tick_size, precision = __get_tick_size(client)
     
     adjusted_take_profit = __adjust_to_tick_size(take_profit, tick_size, precision)
     adjusted_stop_loss = __adjust_to_tick_size(stop_loss, tick_size, precision)

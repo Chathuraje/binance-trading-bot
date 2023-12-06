@@ -14,7 +14,7 @@ def update_last_processed_timestamp(timestamp):
     global last_processed_timestamp
     last_processed_timestamp = timestamp
 
-def check_for_signals(client):
+def check_for_signals(client, tick_size, precision):
     global last_processed_timestamp
     
     while True:
@@ -37,7 +37,7 @@ def check_for_signals(client):
                     if get_active_trade_count() >= int(MAX_ORDERS):
                         print(f"New Signal Received: Given {MAX_ORDERS} Orders are Active")
                     else:
-                        enter_trade(client, timestamp, latest_signal)
+                        enter_trade(client, timestamp, latest_signal, tick_size, precision)
                         
                 else:
                     print(f"Invalid signal at {timestamp}")
@@ -66,6 +66,14 @@ def __select_the_market():
         
     return client
 
+def __get_tick_size(client):
+    data = client.exchange_info()
+    # Assuming you want to get tick size for the first symbol
+    tick_size = float(data['symbols'][0]['filters'][0]['tickSize'])
+    precision = int(data['symbols'][0]['filters'][0]['tickSize'].split('.')[1].find('1'))
+    
+    return tick_size, precision
+
 
 def __setup_account(client):
     if MARKET == "CMFutures" or MARKET == "UMFutures":
@@ -79,6 +87,10 @@ def __setup_account(client):
         except:
             print(f"Failed to change margin type to CROSSED or current margin type is already CROSSED")
             
+        tick_size, precision = __get_tick_size(client)
+        
+        return tick_size, precision
+            
     else:
         print("Invalid Market")
         exit(1)
@@ -87,7 +99,7 @@ if __name__ == "__main__":
     print("Starting the Bot..")
     client = __select_the_market()
     account_balance = __get_account_balance(client)
-    __setup_account(client)
+    tick_size, precision = __setup_account(client)
     
     print(f"The available Balance for {FIAT_CURRENCY} is: {account_balance}")
     
@@ -96,4 +108,4 @@ if __name__ == "__main__":
         exit(1)
     
     print("Starting to check for signals...")
-    check_for_signals(client)
+    check_for_signals(client, tick_size, precision)
