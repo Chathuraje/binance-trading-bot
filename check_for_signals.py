@@ -67,12 +67,17 @@ def __select_the_market():
     return client
 
 def __get_tick_size(client):
-    data = client.exchange_info()
-    # Assuming you want to get tick size for the first symbol
-    tick_size = float(data['symbols'][0]['filters'][0]['tickSize'])
-    precision = int(data['symbols'][0]['filters'][0]['tickSize'].split('.')[1].find('1'))
-    
-    return tick_size, precision
+    try:
+        data = client.exchange_info()
+         # Assuming you want to get tick size for the first symbol
+        tick_size = float(data['symbols'][0]['filters'][0]['tickSize'])
+        precision = int(data['symbols'][0]['filters'][0]['tickSize'].split('.')[1].find('1'))
+        
+        return tick_size, precision
+    except:
+        print("Failed to get exchange info")
+        exit(1)
+   
 
 
 def __setup_account(client):
@@ -87,10 +92,6 @@ def __setup_account(client):
         except:
             print(f"Failed to change margin type to CROSSED or current margin type is already CROSSED")
             
-        tick_size, precision = __get_tick_size(client)
-        
-        return tick_size, precision
-            
     else:
         print("Invalid Market")
         exit(1)
@@ -98,8 +99,11 @@ def __setup_account(client):
 if __name__ == "__main__":
     print("Starting the Bot..")
     client = __select_the_market()
+    
+    tick_size, precision = __get_tick_size(client)
+    
     account_balance = __get_account_balance(client)
-    tick_size, precision = __setup_account(client)
+    __setup_account(client)
     
     print(f"The available Balance for {FIAT_CURRENCY} is: {account_balance}")
     

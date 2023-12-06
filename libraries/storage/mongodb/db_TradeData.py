@@ -38,27 +38,22 @@ def get_active_trade_data(trade_id: str) -> OrderDB:
     
     return trade_data
 
-
-# def __update_trade_status(trade_id: str, status: str):
-#     # Update the trade status in the collection
-#     if trade_id is not None:
-#         # Update the trade status in the collection
-#         trade_collection.update_one({'_id': trade_id}, {'$set': {'status': status}})
-#     else:
-#         print(f"Invalid trade_id: {trade_id}")
+from bson import ObjectId
+def __update_trade_status(trade_id, status):
+    print(f"Updating trade status for trade_id {trade_id} to {status}.")
+    # Update the trade status in the collection
+    trade_object_id = ObjectId(trade_id)
+    trade_collection.update_one({'_id': trade_object_id}, {'$set': {'Status': status}})
     
 
 def delete_active_trade(trade_id, status):
     
-    trade_id = active_trade_collection.find_one({'trade_id': trade_id}, {'_id': 0, 'trade_id': 0})
-    result = active_trade_collection.delete_one({"_id": trade_id})
-
-    # Check if the deletion was successful
-    if result.deleted_count == 1:
-         # Get tradeID from active_trade_collection
+    result = active_trade_collection.find_one({'_id': trade_id})
+    if result:
+        returned_trade_id = result.get('trade_id')
+        __update_trade_status(returned_trade_id, status)
+        active_trade_collection.delete_one({"_id": trade_id})
         
-        print(trade_id)
-        # __update_trade_status(trade_id, status)
     else:
         print(f"No document found with _id {trade_id}.")
     

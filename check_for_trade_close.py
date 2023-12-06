@@ -73,6 +73,7 @@ def check_for_order_close(client):
                     status = "Hit Stop Loss"
                 elif outcome == 2:
                     print(f"Trade: {trade_id} - Trade closed manually")
+                    status = "Manually Closed"
                 else:
                     print("Error")
                     exit(1)
