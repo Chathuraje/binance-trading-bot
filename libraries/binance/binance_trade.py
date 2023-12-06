@@ -36,11 +36,11 @@ def __save_in_db(close_price, order_data, stop_loss_data, take_profit_data):
     return create_trade(order_columns)
 
 
-def __place_the_order(client, position_side, quantity):
+def __place_the_order(client, position_side, quantity, side):
     
     params = {
         'symbol': COIN_PAIR,
-        'side': "BUY",
+        'side': side,
         'type': 'MARKET',
         'positionSide': position_side,
         'quantity': quantity,
@@ -57,10 +57,10 @@ def __place_the_order(client, position_side, quantity):
         exit(1)
        
        
-def __place_the_take_profit(client, position_side, quantity, take_profit):
+def __place_the_take_profit(client, position_side, quantity, take_profit, side):
     params = {
         'symbol': COIN_PAIR,
-        'side': "SELL",
+        'side': side,
         'type': 'LIMIT',
         'positionSide': position_side,
         'quantity': quantity,
@@ -78,10 +78,10 @@ def __place_the_take_profit(client, position_side, quantity, take_profit):
         exit(1)
         
 
-def __place_the_stop_loss(client, position_side, quantity, stop_loss):
+def __place_the_stop_loss(client, position_side, quantity, stop_loss, side):
     params = {
         'symbol': COIN_PAIR,
-        'side': "SELL",
+        'side': side,
         'type': 'STOP_MARKET',
         'positionSide': position_side,
         'quantity': quantity,
@@ -123,8 +123,12 @@ def enter_trade(client, timestamp, latest_signal, tick_size, precision):
         
     if signal_type == 1:
         position_side = "LONG"
+        side_order = "BUY"
+        side_opp = "SELL"
     elif signal_type == -1:
         position_side = "SHORT"
+        side_order = "SELL"
+        side_opp = "BUY"
     else:
         print("Invalid signal_type")
         exit(1)
@@ -133,8 +137,8 @@ def enter_trade(client, timestamp, latest_signal, tick_size, precision):
     adjusted_take_profit = __adjust_to_tick_size(take_profit, tick_size, precision)
     adjusted_stop_loss = __adjust_to_tick_size(stop_loss, tick_size, precision)
     
-    order_data = __place_the_order(client, position_side, quantity)  
-    take_profit_data = __place_the_take_profit(client, position_side, order_data['origQty'], adjusted_take_profit)
-    stop_loss_data = __place_the_stop_loss(client, position_side, order_data['origQty'], adjusted_stop_loss)
+    order_data = __place_the_order(client, position_side, quantity, side_order)  
+    take_profit_data = __place_the_take_profit(client, position_side, order_data['origQty'], adjusted_take_profit, side_opp)
+    stop_loss_data = __place_the_stop_loss(client, position_side, order_data['origQty'], adjusted_stop_loss, side_opp)
     
     __save_in_db(close_price, order_data, stop_loss_data, take_profit_data)
