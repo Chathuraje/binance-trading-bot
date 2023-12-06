@@ -22,11 +22,24 @@ def __get_trade_outcome(trade_order_status, stop_loss_status, take_profit_status
         
         return 0  # Trade is still open
     
-    
+
+
+previous_active_trades = None
+
+def __display_trades(active_trades):
+    global previous_active_trades
+    if len(active_trades) != 0:
+        if active_trades != previous_active_trades:
+            print("Open Trades are: " + ', '.join([f"Trade ID: {trade_ids['trade_id']}" for trade_ids in active_trades]))
+            previous_active_trades = active_trades
+
     
 def check_for_order_close(client):
+    
     while True:
         active_trades = get_active_trade_ids()
+        __display_trades(active_trades)
+        
         
         for trade_ids in active_trades:
             trade_id = trade_ids['trade_id']
@@ -62,7 +75,7 @@ def check_for_order_close(client):
             
             status = ""
             if outcome == 0:
-                print(f"Trade: {trade_id} - Trade still open")
+                # Trade is still open
                 status = "Active Trade"
             else:
                 if outcome == 1:

@@ -1,8 +1,15 @@
-:: run_all.bat
-
 @echo off
-REM This batch script activates a virtual environment and runs three Python scripts one after another with a 10-second delay between each.
-REM Press Ctrl+C to terminate the script.
+
+REM Prompt user for setup
+set /p setup="Do you want to run setup code? (y/n): "
+if /i "%setup%"=="y" (
+    echo Running setup...
+    start cmd /k "call .venv\Scripts\activate.bat && python setup.py"
+    timeout /t 10 /nobreak >nul
+    echo Setup complete!
+) else (
+    echo Skipping setup...
+)
 
 REM Run analyze.py script in a new window
 echo Running analysis...

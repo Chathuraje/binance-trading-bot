@@ -23,11 +23,6 @@ def bot_functions(client):
     
     historical_data = update_historical_database(client)
     update_strategy_database(historical_data)
-    
-    print("Resynchronizing data...")
-    
-    historical_data = update_historical_database(client)
-    update_strategy_database(historical_data)
 
 def on_message(ws, message):
     data = json.loads(message)
@@ -80,6 +75,11 @@ def collect_market_data():
     except KeyboardInterrupt:
         print("WebSocket connection closed due to keyboard interrupt.")
         ws.close()
+        
+
+def first_collect_data():
+    client_spot = connect_to_UMFutures(use_api_keys=False)
+    bot_functions(client_spot)
 
 
 
