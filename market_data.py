@@ -1,5 +1,5 @@
 from libraries.config import TIMEZONE, COIN_PAIR, INTERVAL
-from libraries.binance.connect import connect_to_spot
+from libraries.binance.connect import connect_to_UMFutures
 from libraries.storage.sql.db_HistoricalData import update_historical_database, insert_data
 from libraries.strategy.db_StrategyData import update_strategy_database, insert_data_strategy
 from libraries.strategy.main import strategy
@@ -65,7 +65,7 @@ def on_open(ws):
     print("WebSocket connection opened")
 
 def collect_market_data():
-    client_spot = connect_to_spot(use_api_keys=False)
+    client_spot = connect_to_UMFutures(use_api_keys=False)
     print("Starting bot...")
     bot_functions(client_spot)
     print("Bot started...")

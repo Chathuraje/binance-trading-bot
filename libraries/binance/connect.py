@@ -49,29 +49,29 @@ def __connect_to_binance(api_class, name, use_api_keys=True):
         print("Failed to connect to Binance API")
         exit(1)
 
-def connect_to_spot(use_api_keys=True):
-    """
-    Connects to the Binance Spot API.
+# def connect_to_spot(use_api_keys=True):
+#     """
+#     Connects to the Binance Spot API.
 
-    Args:
-        use_api_keys (bool): Indicates whether to use API keys or not.
+#     Args:
+#         use_api_keys (bool): Indicates whether to use API keys or not.
 
-    Returns:
-        Spot: The connected Binance Spot API client.
-    """
-    return __connect_to_binance(Spot, "Spot", use_api_keys)
+#     Returns:
+#         Spot: The connected Binance Spot API client.
+#     """
+#     return __connect_to_binance(Spot, "Spot", use_api_keys)
 
-def connect_to_CMFutures(use_api_keys=True):
-    """
-    Connects to the Binance Coin-M Futures API.
+# def connect_to_CMFutures(use_api_keys=True):
+#     """
+#     Connects to the Binance Coin-M Futures API.
 
-    Args:
-        use_api_keys (bool): Indicates whether to use API keys or not.
+#     Args:
+#         use_api_keys (bool): Indicates whether to use API keys or not.
 
-    Returns:
-        CMFutures: The connected Binance Coin-M Futures API client.
-    """
-    return __connect_to_binance(CMFutures, "CMFutures", use_api_keys)
+#     Returns:
+#         CMFutures: The connected Binance Coin-M Futures API client.
+#     """
+#     return __connect_to_binance(CMFutures, "CMFutures", use_api_keys)
 
 def connect_to_UMFutures(use_api_keys=True):
     """

@@ -3,7 +3,7 @@ import pandas as pd
 from libraries.strategy.db_StrategyData import get_last_timstamp, read_last_record
 from libraries.binance.binance_trade import enter_trade
 from libraries.storage.mongodb.db_TradeData import get_active_trade_count
-from libraries.binance.connect import connect_to_UMFutures, connect_to_CMFutures, connect_to_spot
+from libraries.binance.connect import connect_to_UMFutures
 from libraries.config import MARKET, FIAT_CURRENCY, MINUMUM_ACCOUNT_BALANCE, COIN_PAIR, MAX_ORDERS
 
 # Global variable to store the last processed timestamp
@@ -60,10 +60,6 @@ def __get_account_balance(client):
 def __select_the_market():
     if MARKET == "UMFutures":
         client = connect_to_UMFutures(use_api_keys=True)
-    # elif MARKET == "Spot":
-    #     client = connect_to_spot(use_api_keys=True)
-    # elif MARKET == "CMFutures":
-    #     client = connect_to_CMFutures(use_api_keys=True)
     else:
         print("Invalid Market")
         exit(1)
