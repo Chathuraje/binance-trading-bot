@@ -1,50 +1,68 @@
-from libraries.strategy.db_StrategyData import read_data
 import pandas as pd
+import backtrader as bt
+from libraries.strategy.db_StrategyData import read_data
 
-def enter_position(row, equity, leverage, position_type):
-    position = position_type
-    entry_price = row['close']
-    quantity = (equity * leverage) / entry_price
-    stop_loss = entry_price - row['stop_loss'] if position_type == 1 else entry_price + row['stop_loss']
-    take_profit = entry_price + row['take_profit'] if position_type == 1 else entry_price - row['take_profit']
-    return position, entry_price, quantity, stop_loss, take_profit
+class MyStrategy(bt.Strategy):
+    params = (
+        ("leverage", 1),  # Default leverage
+        ("stop_loss", 0.02),  # Default stop-loss as a percentage
+        ("take_profit", 0.02),  # Default take-profit as a percentage
+    )
 
-def exit_position(row, position, entry_price, quantity, equity):
-    position = 0
-    equity += quantity * (row['close'] - entry_price)
-    return position, equity
+    def __init__(self):
+        self.order = None
 
+    def next(self):
+        if self.order:
+            return  # If an order is pending, don't do anything
 
-def calculate_equity(df, initial_equity, initial_leverage, max_trades):
-    equity = initial_equity
-    leverage = initial_leverage
-    position = 0
-    entry_price = 0
-    stop_loss = 0
-    take_profit = 0
-    quantity = 0
-    open_trades = 0
+        timestamp = self.data.datetime.datetime()
+        close = self.data.close[0]
+        signal = self.data.signal[0]
+        leverage = self.params.leverage
+        stop_loss = close * (1 - self.params.stop_loss)
+        take_profit = close * (1 + self.params.take_profit)
+        quantity = self.data.quantity[0]
 
-    equity_over_time = []
+        if signal == 1:
+            self.order = self.buy(size=quantity, exectype=bt.Order.Stop, price=stop_loss)
+            self.sell(exectype=bt.Order.Limit, price=take_profit, parent=self.order)
+        elif signal == -1:
+            self.order = self.sell(size=quantity, exectype=bt.Order.Stop, price=stop_loss)
+            self.buy(exectype=bt.Order.Limit, price=take_profit, parent=self.order)
 
-    for index, row in df.iterrows():
-        if row['signal'] == 1 and position == 0 and open_trades < max_trades:
-            position, entry_price, quantity, stop_loss, take_profit = enter_position(row, equity, leverage, position_type=1)
-            open_trades += 1
-        elif row['signal'] == -1 and position == 0 and open_trades < max_trades:
-            position, entry_price, quantity, stop_loss, take_profit = enter_position(row, equity, leverage, position_type=-1)
-            open_trades += 1
-        elif (row['close'] <= stop_loss or row['close'] >= take_profit) and position != 0:
-            position, equity = exit_position(row, position, entry_price, quantity, equity)
-            open_trades -= 1
-            equity_over_time.append(equity)
+    def notify_order(self, order):
+        if order.status in [order.Completed, order.Canceled, order.Margin, order.Rejected]:
+            if order.isbuy():
+                self.log(f"Buy executed - Price: {order.executed.price}, Cost: {order.executed.value}, Comm: {order.executed.comm}")
+            elif order.issell():
+                self.log(f"Sell executed - Price: {order.executed.price}, Cost: {order.executed.value}, Comm: {order.executed.comm}")
 
-    return pd.DataFrame(equity_over_time, columns=['Equity'])
+            self.order = None
 
 def backtest():
+    cerebro = bt.Cerebro()
+
+    # Add the data to the backtest
     data = read_data()
-    equity_result = calculate_equity(data, 10000, 1, 1)
+    data['timestamp'] = pd.to_datetime(data['timestamp'])  # Convert timestamp to datetime
+    data = bt.feeds.PandasData(dataname=data.set_index('timestamp'))
+    cerebro.adddata(data)
 
-    print(equity_result)
+    # Add the strategy to the backtest
+    cerebro.addstrategy(MyStrategy)
 
-backtest()
+    # Set the initial cash amount
+    cerebro.broker.set_cash(10000)
+
+    # Print the starting cash amount
+    print(f"Starting Portfolio Value: {cerebro.broker.getvalue()}")
+
+    # Run the backtest
+    cerebro.run()
+
+    # Print the final cash amount
+    print(f"Ending Portfolio Value: {cerebro.broker.getvalue()}")
+
+if __name__ == '__main__':
+    backtest()
